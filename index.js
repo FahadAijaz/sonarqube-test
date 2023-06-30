@@ -6,4 +6,6 @@ app.listen(3000, () => {
 
     const t1 = 1;
     console.log(t1);
+    const t2 = 2;
+    console.log(t2);
 });
