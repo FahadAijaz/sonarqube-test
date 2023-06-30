@@ -42,4 +42,5 @@ app.listen(3000, () => {
     }
 
     console.log(result);
+    console.log(result);
 });
