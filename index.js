@@ -44,3 +44,68 @@ app.listen(3000, () => {
     console.log(result);
     console.log(result);
 });
+
+function astar(graph, startNode, endNode, heuristic) {
+    const openSet = new Set([startNode]);
+    const cameFrom = {};
+    const gScore = {};
+    const fScore = {};
+    gScore[startNode] = 0;
+    fScore[startNode] = heuristic(startNode, endNode);
+
+    while (openSet.size > 0) {
+        let lowestNode = null;
+        let lowestFScore = Infinity;
+
+        for (let node of nodes) {
+            if (fScore[node] < lowestFScore) {
+                lowestNode = node;
+                lowestFScore = fScore[node];
+            }
+        }
+
+        const current = lowestNode;
+
+        if (current === endNode) {
+            return reconstructPath(cameFrom, current);
+        }
+
+        openSet.delete(current);
+
+        const neighbors = graph[current];
+        for (let neighbor of neighbors) {
+            const tentativeGScore = gScore[current] +
+                Math.sqrt(Math.pow(current[0] - neighbor[0], 2) + Math.pow(current[1] - neighbor[1], 2));
+
+            if (!gScore.hasOwnProperty(neighbor) || tentativeGScore < gScore[neighbor]) {
+                cameFrom[neighbor] = current;
+                gScore[neighbor] = tentativeGScore;
+                fScore[neighbor] = gScore[neighbor] + heuristic(neighbor, endNode);
+
+                if (!openSet.has(neighbor)) {
+                    openSet.add(neighbor);
+                }
+            }
+        }
+    }
+
+    return null;
+}
+
+
+function reconstructPath(cameFrom, current) {
+    const path = [current];
+
+    while (cameFrom.hasOwnProperty(current)) {
+        current = cameFrom[current];
+        path.unshift(current);
+    }
+
+    return path;
+}
+
+function getDistance(nodeA, nodeB) {
+    // Calculate the distance between nodeA and nodeB
+    // ...
+}
+
